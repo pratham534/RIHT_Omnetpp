@@ -1,0 +1,51 @@
+SB ov 1537 ev 2 rid General-0-20241118-13:10:14-2252
+
+E # 0 t 0 m 1 ce -1 msg -1
+MC id 1 c omnetpp::cModule t RIHT.RIHTNetwork n RIHTNetwork cm 1
+MDC id 1 d bgb=601,440
+MC id 2 c RIHTRouter t RIHT.RIHTRouter pid 1 n router1
+MDC id 2 d p=421,256
+GC m 2 g 1048576 n ethg$i i 0 o 0
+GC m 2 g 1572864 n ethg$o i 0 o 1
+GC m 2 g 1048577 n ethg$i i 1 o 0
+GC m 2 g 1572865 n ethg$o i 1 o 1
+GC m 2 g 1048578 n ethg$i i 2 o 0
+GC m 2 g 1572866 n ethg$o i 2 o 1
+MC id 3 c RIHTRouter t RIHT.RIHTRouter pid 1 n router2
+MDC id 3 d p=308,183
+GC m 3 g 1048576 n ethg$i i 0 o 0
+GC m 3 g 1572864 n ethg$o i 0 o 1
+GC m 3 g 1048577 n ethg$i i 1 o 0
+GC m 3 g 1572865 n ethg$o i 1 o 1
+MC id 4 c RIHTRouter t RIHT.RIHTRouter pid 1 n router3
+MDC id 4 d p=177,183
+GC m 4 g 1048576 n ethg$i i 0 o 0
+GC m 4 g 1572864 n ethg$o i 0 o 1
+GC m 4 g 1048577 n ethg$i i 1 o 0
+GC m 4 g 1572865 n ethg$o i 1 o 1
+MC id 5 c RIHTRouter t RIHT.RIHTRouter pid 1 n router4
+MDC id 5 d p=308,307
+GC m 5 g 1048576 n ethg$i i 0 o 0
+GC m 5 g 1572864 n ethg$o i 0 o 1
+GC m 5 g 1048577 n ethg$i i 1 o 0
+GC m 5 g 1572865 n ethg$o i 1 o 1
+MC id 6 c RIHTRouter t RIHT.RIHTRouter pid 1 n router5
+MDC id 6 d p=177,307
+GC m 6 g 1048576 n ethg$i i 0 o 0
+GC m 6 g 1572864 n ethg$o i 0 o 1
+GC m 6 g 1048577 n ethg$i i 1 o 0
+GC m 6 g 1572865 n ethg$o i 1 o 1
+MC id 7 c Receiver t RIHT.Receiver pid 1 n victim
+MDC id 7 d p=496,256
+GC m 7 g 1048576 n ethg$i i 0 o 0
+GC m 7 g 1572864 n ethg$o i 0 o 1
+MC id 8 c Sender t RIHT.Sender pid 1 n attacker
+MDC id 8 d p=75,307
+GC m 8 g 1048576 n ethg$i i 0 o 0
+GC m 8 g 1572864 n ethg$o i 0 o 1
+MC id 9 c Sender t RIHT.Sender pid 1 n host
+MDC id 9 d p=75,183
+GC m 9 g 1048576 n ethg$i i 0 o 0
+GC m 9 g 1572864 n ethg$o i 0 o 1
+
+SE e 0 c -1 m ""

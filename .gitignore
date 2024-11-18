@@ -1,0 +1,13 @@
+# OMNeT++ specific ignores
+out/
+*.o
+*.so
+*.exe
+*.log
+*.vec
+*.sca
+*.opp_log
+
+# General ignores
+.DS_Store
+*.swp
