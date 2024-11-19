@@ -33,11 +33,18 @@ PROJECTRELATIVE_PATH = src
 O = $(PROJECT_OUTPUT_DIR)/$(CONFIGNAME)/$(PROJECTRELATIVE_PATH)
 
 # Object files for local .cc, .msg and .sm files
-OBJS = $O/MyRoutingProtocol.o $O/Receiver.o $O/RIHTRouter.o $O/Sender.o $O/RIHTPacket_m.o
+OBJS = \
+    $O/CustomIPv4Packet.o \
+    $O/Receiver.o \
+    $O/RIHTRouter.o \
+    $O/Sender.o \
+    $O/RIHTPacket_m.o \
+    $O/RIHTReconstructionPacket_m.o
 
 # Message files
 MSGFILES = \
-    RIHTPacket.msg
+    RIHTPacket.msg \
+    RIHTReconstructionPacket.msg
 
 # SM files
 SMFILES =

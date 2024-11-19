@@ -1,10 +1,10 @@
-SB ov 1537 ev 2 rid General-0-20241118-13:10:14-2252
+SB ov 1537 ev 2 rid General-0-20241119-14:20:17-9456
 
 E # 0 t 0 m 1 ce -1 msg -1
 MC id 1 c omnetpp::cModule t RIHT.RIHTNetwork n RIHTNetwork cm 1
 MDC id 1 d bgb=601,440
 MC id 2 c RIHTRouter t RIHT.RIHTRouter pid 1 n router1
-MDC id 2 d p=421,256
+MDC id 2 d p=341,256
 GC m 2 g 1048576 n ethg$i i 0 o 0
 GC m 2 g 1572864 n ethg$o i 0 o 1
 GC m 2 g 1048577 n ethg$i i 1 o 0
@@ -12,40 +12,195 @@ GC m 2 g 1572865 n ethg$o i 1 o 1
 GC m 2 g 1048578 n ethg$i i 2 o 0
 GC m 2 g 1572866 n ethg$o i 2 o 1
 MC id 3 c RIHTRouter t RIHT.RIHTRouter pid 1 n router2
-MDC id 3 d p=308,183
+MDC id 3 d p=228,183
 GC m 3 g 1048576 n ethg$i i 0 o 0
 GC m 3 g 1572864 n ethg$o i 0 o 1
 GC m 3 g 1048577 n ethg$i i 1 o 0
 GC m 3 g 1572865 n ethg$o i 1 o 1
 MC id 4 c RIHTRouter t RIHT.RIHTRouter pid 1 n router3
-MDC id 4 d p=177,183
+MDC id 4 d p=228,307
 GC m 4 g 1048576 n ethg$i i 0 o 0
 GC m 4 g 1572864 n ethg$o i 0 o 1
 GC m 4 g 1048577 n ethg$i i 1 o 0
 GC m 4 g 1572865 n ethg$o i 1 o 1
-MC id 5 c RIHTRouter t RIHT.RIHTRouter pid 1 n router4
-MDC id 5 d p=308,307
+MC id 5 c Receiver t RIHT.Receiver pid 1 n victim
+MDC id 5 d p=416,256
 GC m 5 g 1048576 n ethg$i i 0 o 0
 GC m 5 g 1572864 n ethg$o i 0 o 1
-GC m 5 g 1048577 n ethg$i i 1 o 0
-GC m 5 g 1572865 n ethg$o i 1 o 1
-MC id 6 c RIHTRouter t RIHT.RIHTRouter pid 1 n router5
-MDC id 6 d p=177,307
+MC id 6 c Sender t RIHT.Sender pid 1 n attacker
+MDC id 6 d p=133,307
 GC m 6 g 1048576 n ethg$i i 0 o 0
 GC m 6 g 1572864 n ethg$o i 0 o 1
-GC m 6 g 1048577 n ethg$i i 1 o 0
-GC m 6 g 1572865 n ethg$o i 1 o 1
-MC id 7 c Receiver t RIHT.Receiver pid 1 n victim
-MDC id 7 d p=496,256
+MC id 7 c Sender t RIHT.Sender pid 1 n host
+MDC id 7 d p=133,183
 GC m 7 g 1048576 n ethg$i i 0 o 0
 GC m 7 g 1572864 n ethg$o i 0 o 1
-MC id 8 c Sender t RIHT.Sender pid 1 n attacker
-MDC id 8 d p=75,307
-GC m 8 g 1048576 n ethg$i i 0 o 0
-GC m 8 g 1572864 n ethg$o i 0 o 1
-MC id 9 c Sender t RIHT.Sender pid 1 n host
-MDC id 9 d p=75,183
-GC m 9 g 1048576 n ethg$i i 0 o 0
-GC m 9 g 1572864 n ethg$o i 0 o 1
+CC sm 3 sg 1572865 dm 2 dg 1048576
+CDC sm 3 sg 1572865 d ""
+CC sm 2 sg 1572864 dm 3 dg 1048577
+CDC sm 2 sg 1572864 d ""
+CC sm 2 sg 1572865 dm 5 dg 1048576
+CDC sm 2 sg 1572865 d ""
+CC sm 5 sg 1572864 dm 2 dg 1048577
+CDC sm 5 sg 1572864 d ""
+CC sm 4 sg 1572865 dm 2 dg 1048578
+CDC sm 4 sg 1572865 d ""
+CC sm 2 sg 1572866 dm 4 dg 1048577
+CDC sm 2 sg 1572866 d ""
+CC sm 7 sg 1572864 dm 3 dg 1048576
+CDC sm 7 sg 1572864 d ""
+CC sm 3 sg 1572864 dm 7 dg 1048576
+CDC sm 3 sg 1572864 d ""
+CC sm 6 sg 1572864 dm 4 dg 1048576
+CDC sm 6 sg 1572864 d ""
+CC sm 4 sg 1572864 dm 6 dg 1048576
+CDC sm 4 sg 1572864 d ""
+CMB sm 1 tm 2 m initialize(0)
+- INFO: Router Initialized 
+CME
+CMB sm 1 tm 3 m initialize(0)
+- INFO: Router Initialized 
+CME
+CMB sm 1 tm 4 m initialize(0)
+- INFO: Router Initialized 
+CME
+CMB sm 1 tm 5 m initialize(0)
+- INFO: Receiver Initialized!
+CME
+CMB sm 1 tm 6 m initialize(0)
+- INFO: Sender initialized
+- INFO: Sending packet...
+CM id 2 tid 2 eid 2 etid 2 c omnetpp::cMessage n "" pe -1
+BS id 2 tid 2 eid 2 etid 2 c RIHTPacket n "" m 6 pe 0 sd 1
+SH sm 6 sg 1572864 pd 10
+ES id 2 tid 2 eid 2 etid 2 c RIHTPacket n "" sm 6 sg 1572864 st 1 am 4 ag 1048576 at 11 pe 0
+CL id 3 tid 2 eid 3 etid 2 c omnetpp::cMessage n "" m 6 pe -1 cid 2
+CME
+CMB sm 1 tm 7 m initialize(0)
+- INFO: Sender initialized
+- INFO: Sending packet...
+CM id 3 tid 3 eid 3 etid 3 c omnetpp::cMessage n "" pe -1
+BS id 3 tid 3 eid 3 etid 3 c RIHTPacket n "" m 7 pe 0 sd 1
+SH sm 7 sg 1572864 pd 10
+ES id 3 tid 3 eid 3 etid 3 c RIHTPacket n "" sm 7 sg 1572864 st 1 am 3 ag 1048576 at 11 pe 0
+CL id 4 tid 3 eid 4 etid 3 c omnetpp::cMessage n "" m 7 pe -1 cid 3
+CME
 
-SE e 0 c -1 m ""
+E # 1 t 11 m 4 ce 0 msg 2
+- INFO: p.mark = 0 UI = 0
+- INFO: Hash Table Before Processing:
+- INFO: Index	Mark	UI
+- INFO: 0	-1	-1
+- INFO: 1	-1	-1
+- INFO: 2	-1	-1
+- INFO: 3	-1	-1
+- INFO: 4	-1	-1
+- INFO: 5	-1	-1
+- INFO: 6	-1	-1
+- INFO: 7	-1	-1
+- INFO: 8	-1	-1
+- INFO: 9	-1	-1
+- INFO: new p.mark = 1
+- INFO: final p.mark = 1
+- INFO: Packet received on interface 0, forwarding to interface 1
+BS id 2 tid 2 eid 2 etid 2 c RIHTPacket n "" m 4 pe 1 sd 2
+SH sm 4 sg 1572865 pd 10
+ES id 2 tid 2 eid 2 etid 2 c RIHTPacket n "" sm 4 sg 1572865 st 13 am 2 ag 1048578 at 23 pe 1
+CL id 4 tid 2 eid 4 etid 2 c omnetpp::cMessage n "" m 4 pe -1 cid 2
+
+E # 2 t 11 m 3 ce 0 msg 3
+- INFO: p.mark = 0 UI = 0
+- INFO: Hash Table Before Processing:
+- INFO: Index	Mark	UI
+- INFO: 0	-1	-1
+- INFO: 1	-1	-1
+- INFO: 2	-1	-1
+- INFO: 3	-1	-1
+- INFO: 4	-1	-1
+- INFO: 5	-1	-1
+- INFO: 6	-1	-1
+- INFO: 7	-1	-1
+- INFO: 8	-1	-1
+- INFO: 9	-1	-1
+- INFO: new p.mark = 1
+- INFO: final p.mark = 1
+- INFO: Packet received on interface 0, forwarding to interface 1
+BS id 3 tid 3 eid 3 etid 3 c RIHTPacket n "" m 3 pe 2 sd 2
+SH sm 3 sg 1572865 pd 10
+ES id 3 tid 3 eid 3 etid 3 c RIHTPacket n "" sm 3 sg 1572865 st 13 am 2 ag 1048576 at 23 pe 2
+CL id 4 tid 3 eid 4 etid 3 c omnetpp::cMessage n "" m 3 pe -1 cid 3
+
+E # 3 t 23 m 2 ce 1 msg 2
+- INFO: p.mark = 1 UI = 2
+- INFO: Hash Table Before Processing:
+- INFO: Index	Mark	UI
+- INFO: 0	-1	-1
+- INFO: 1	-1	-1
+- INFO: 2	-1	-1
+- INFO: 3	-1	-1
+- INFO: 4	-1	-1
+- INFO: 5	-1	-1
+- INFO: 6	-1	-1
+- INFO: 7	-1	-1
+- INFO: 8	-1	-1
+- INFO: 9	-1	-1
+- INFO: new p.mark = 7
+- INFO: final p.mark = 7
+- INFO: Packet received on interface 2, forwarding to interface 0
+BS id 2 tid 2 eid 2 etid 2 c RIHTPacket n "" m 2 pe 3 sd 2
+SH sm 2 sg 1572864 pd 10
+ES id 2 tid 2 eid 2 etid 2 c RIHTPacket n "" sm 2 sg 1572864 st 25 am 3 ag 1048577 at 35 pe 3
+CL id 4 tid 2 eid 4 etid 2 c omnetpp::cMessage n "" m 2 pe -1 cid 2
+
+E # 4 t 23 m 2 ce 2 msg 3
+- INFO: p.mark = 1 UI = 0
+- INFO: Hash Table Before Processing:
+- INFO: Index	Mark	UI
+- INFO: 0	-1	-1
+- INFO: 1	-1	-1
+- INFO: 2	-1	-1
+- INFO: 3	-1	-1
+- INFO: 4	-1	-1
+- INFO: 5	-1	-1
+- INFO: 6	-1	-1
+- INFO: 7	-1	-1
+- INFO: 8	-1	-1
+- INFO: 9	-1	-1
+- INFO: new p.mark = 5
+- INFO: final p.mark = 5
+- INFO: Packet received on interface 0, forwarding to interface 1
+BS id 3 tid 3 eid 3 etid 3 c RIHTPacket n "" m 2 pe 4 sd 2
+SH sm 2 sg 1572865 pd 10
+ES id 3 tid 3 eid 3 etid 3 c RIHTPacket n "" sm 2 sg 1572865 st 25 am 5 ag 1048576 at 35 pe 4
+CL id 4 tid 3 eid 4 etid 3 c omnetpp::cMessage n "" m 2 pe -1 cid 3
+
+E # 5 t 35 m 3 ce 3 msg 2
+- INFO: p.mark = 7 UI = 1
+- INFO: Hash Table Before Processing:
+- INFO: Index	Mark	UI
+- INFO: 0	-1	-1
+- INFO: 1	-1	-1
+- INFO: 2	-1	-1
+- INFO: 3	-1	-1
+- INFO: 4	-1	-1
+- INFO: 5	-1	-1
+- INFO: 6	-1	-1
+- INFO: 7	-1	-1
+- INFO: 8	-1	-1
+- INFO: 9	-1	-1
+- INFO: new p.mark = 23
+- INFO: final p.mark = 23
+- INFO: Packet received on interface 1, forwarding to interface 0
+BS id 2 tid 2 eid 2 etid 2 c RIHTPacket n "" m 3 pe 5 sd 2
+SH sm 3 sg 1572864 pd 10
+ES id 2 tid 2 eid 2 etid 2 c RIHTPacket n "" sm 3 sg 1572864 st 37 am 7 ag 1048576 at 47 pe 5
+CL id 4 tid 2 eid 4 etid 2 c omnetpp::cMessage n "" m 3 pe -1 cid 2
+
+E # 6 t 35 m 5 ce 4 msg 3
+- INFO: Received message: Mark-5 UI--1
+
+E # 7 t 47 m 7 ce 5 msg 2
+- INFO: This is sender..
+
+
+SE e 0 c 38 m "Simulation time limit reached -- at t=100s, event #8"

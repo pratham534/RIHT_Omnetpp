@@ -22,7 +22,7 @@ void Sender::initialize()
     packet->setMark(0);
     packet->setUI(-1);
 
-    send(packet, gate("ethg$o",0));
+    sendDelayed(packet, 1, gate("ethg$o", 0));
 }
 
 void Sender::handleMessage(cMessage *msg)

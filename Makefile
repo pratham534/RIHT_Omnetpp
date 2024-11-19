@@ -28,5 +28,5 @@ checkmakefiles:
 	fi
 
 	
-SOURCES = src/RIHTPacket.msg src/RIHTRouter.cc src/Sender.cc src/Receiver.cc src/MyRoutingProtocol.cc
+SOURCES = src/RIHTPacket.msg src/CustomIPv4Packet.cc src/RIHTReconstructionPacket.msg src/RIHTRouter.cc src/Sender.cc src/Receiver.cc
 	

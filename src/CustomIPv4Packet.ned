@@ -13,21 +13,11 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-#ifndef __RIHT_MYROUTINGPROTOCOL_H_
-#define __RIHT_MYROUTINGPROTOCOL_H_
+package RIHT;
 
-#include <omnetpp.h>
-
-using namespace omnetpp;
-
-/**
- * TODO - Generated class
- */
-class MyRoutingProtocol : public cSimpleModule
+//
+// TODO auto-generated module
+//
+simple CustomIPv4Packet
 {
-  protected:
-    virtual void initialize() override;
-    virtual void handleMessage(cMessage *msg) override;
-};
-
-#endif
+}
