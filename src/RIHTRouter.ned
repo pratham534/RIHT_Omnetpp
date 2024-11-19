@@ -3,8 +3,8 @@ package RIHT;
 
 simple RIHTRouter {
     parameters:
-        int degree; // The number of upstream interfaces (D(Ri))
-        int hashTableSize; // The size of the hash table
+        int degree;
+        int hashTableSize;
     gates:
         inout ethg[];
         

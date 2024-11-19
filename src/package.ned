@@ -15,7 +15,7 @@ network RIHTNetwork
     types:
         channel Link extends ned.DatarateChannel
         {
-            delay = 10s;
+            delay = 0.1s;
             datarate = 100Mbps;
         }
     submodules:
@@ -37,17 +37,17 @@ network RIHTNetwork
         victim: Receiver {
             @display("p=416,256");
             gates:
-                ethg[1];  // Specify gate index for victim
+                ethg[1];
         }
         attacker: Sender {
             @display("p=133,307");
             gates:
-                ethg[1];  // Specify gate index for attacker
+                ethg[1];
         }
         host: Sender {
             @display("p=133,183");
             gates:
-                ethg[1];  // Specify gate index for host
+                ethg[1];
         }
     connections:
         router2.ethg[1] <--> Link <--> router1.ethg[0];

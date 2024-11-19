@@ -22,7 +22,7 @@ class RIHTReconstructionPacket;
  * <pre>
  * message RIHTReconstructionPacket
  * {
- *     int markReq;   // The requested mark used for traceback
+ *     int markReq;
  * }
  * </pre>
  */

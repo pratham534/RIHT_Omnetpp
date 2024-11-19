@@ -1,40 +1,77 @@
-
 #include <omnetpp.h>
+#include <map>
 #include "RIHTPacket_m.h"
 #include "RIHTReconstructionPacket_m.h"
 
 using namespace omnetpp;
 
-class Receiver : public omnetpp::cSimpleModule
+class Receiver : public cSimpleModule
 {
+  private:
+    std::map<std::string, int> packetCount;
+    simtime_t lastCheckTime;
+    int attackThreshold;
+
   protected:
     virtual void initialize() override;
     virtual void handleMessage(cMessage *msg) override;
+
+    void checkForDDoS(RIHTPacket *packet);
 };
 
 Define_Module(Receiver);
 
 void Receiver::initialize()
 {
-    // TODO - Generated method body
     EV << "Receiver Initialized!" << "\n";
+    attackThreshold = par("attackThreshold");
+    lastCheckTime = simTime();
 }
 
 void Receiver::handleMessage(cMessage *msg)
 {
-    // TODO - Generated method body
     if (msg->isSelfMessage()) {
-        // Handle self messages (timeouts, etc.)
         return;
     }
+
     RIHTPacket *packet = check_and_cast<RIHTPacket *>(msg);
-    EV << "Packet Received from src: " << packet->getSrcAddress() << "\n";
-    EV << "Received message: Mark-" << packet->getMark() << " UI-"<< packet->getUI()<< "\n";
+    std::string srcAddress = packet->getSrcAddress();
+    packetCount[srcAddress]++;
 
-    int UI = packet->getArrivalGate()->getIndex();
-    RIHTReconstructionPacket *repacket = new RIHTReconstructionPacket();
-    repacket->setMarkReq(packet->getMark());
+    EV << "Packet Received from src: " << srcAddress << "\n";
+    EV << "Received message: Mark-" << packet->getMark() << " UI-" << packet->getUI() << "\n";
 
-    sendDelayed(repacket, 4, gate("ethg$o", UI));
 
+    checkForDDoS(packet);
+
+//    RIHTReconstructionPacket *repacket = new RIHTReconstructionPacket();
+//    repacket->setMarkReq(packet->getMark());
+//    int UI = packet->getArrivalGate()->getIndex();
+//    sendDelayed(repacket, 4, gate("ethg$o", UI));
+
+    delete packet;
 }
+
+void Receiver::checkForDDoS(RIHTPacket *packet)
+{
+    simtime_t now = simTime();
+    if (now - lastCheckTime >= 1)
+    {
+        lastCheckTime = now;
+
+        for (auto it = packetCount.begin(); it != packetCount.end(); ++it) {
+            if (it->second > attackThreshold) {
+                EV << "DDoS detected from source: " << it->first << " with "
+                   << it->second << " packets in last second.\n";
+
+                RIHTReconstructionPacket *repacket = new RIHTReconstructionPacket();
+                repacket->setMarkReq(packet->getMark());
+                int UI = packet->getArrivalGate()->getIndex();
+                sendDelayed(repacket, 1, gate("ethg$o", UI));
+            }
+        }
+
+        packetCount.clear();
+    }
+}
+

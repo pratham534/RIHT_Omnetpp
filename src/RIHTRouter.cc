@@ -42,7 +42,6 @@ void RIHTRouter::initialize() {
 
 void RIHTRouter::handleMessage(omnetpp::cMessage *msg) {
     if (msg->isSelfMessage()) {
-        // Handle self messages (timeouts, etc.)
         return;
     }
 
@@ -52,83 +51,68 @@ void RIHTRouter::handleMessage(omnetpp::cMessage *msg) {
     }
     RIHTPacket *packet = check_and_cast<RIHTPacket *>(msg);
 
-    EV << "Packet srcAdd: " << packet->getSrcAddress() << "\nPacket destAdd: " << packet->getDestAddress() << "\n";
-
     int mark = packet->getMark();
     int upstreamInterface = packet->getArrivalGate()->getIndex();
     EV<<"p.mark = "<<mark<<" UI = "<<upstreamInterface<<"\n";
 
-    // Print hash table before processing the packet
     EV << "Hash Table Before Processing:\n";
     printHashTable();
 
-    // Step 1: Compute mark_new
     int mark_new = mark * (degree + 1) + upstreamInterface + 1;
     EV<<"new p.mark = "<<mark_new<<"\n";
-    // Step 2: Check for 32-bit integer overflow
+
     const int MAX_8BIT_INT = 255;
     if (mark_new > MAX_8BIT_INT) {
         EV<<"Mark Overflow. Logging....\n";
         int index = hashFunction(mark);
         int probe = 0;
 
-        // Step 3: Quadratic probing
         while (hashTable[index].mark != -1 &&
                !(hashTable[index].mark == mark && hashTable[index].UI == upstreamInterface)) {
             probe++;
             index = (index + 1 * probe + 2 * probe * probe) % hashTableSize;
         }
 
-        // Step 4: Insert or update the hash table entry
         if (hashTable[index].mark == -1) {
             hashTable[index].mark = mark;
             hashTable[index].UI = upstreamInterface;
             EV << "Hash Table After Logging Mark:\n";
             printHashTable();
         }
-        // Update mark_new based on the index
         mark_new = index * (degree + 1);
     }
     EV<<"final p.mark = "<<mark_new<<"\n";
-
-    // Step 5: Update the packet mark
     packet->setMark(mark_new);
 
-    // Compute the outgoing interface (downstream interface)
     int outgoingInterface = (upstreamInterface + 1) % degree;
-
     std::string destAddress = packet->getDestAddress();
     if (destAddress == "192.168.0.6") {
         outgoingInterface = 1;
     }
 
-    EV << "Packet received on interface " << upstreamInterface
-       << ", forwarding to interface " << outgoingInterface << "\n";
+    EV << "Packet received on interface " << upstreamInterface << ", forwarding to interface " << outgoingInterface << "\n";
 
-    // Forward the packet to the selected interface
-    simtime_t delay = 2;
-    sendDelayed(msg, delay, gate("ethg$o", outgoingInterface));
+    sendDelayed(msg, 2, gate("ethg$o", outgoingInterface));
 }
 
 void RIHTRouter::handleReconstructionRequest(RIHTReconstructionPacket *reconPacket) {
     int mark_req = reconPacket->getMarkReq();
-    int UI_i = mark_req % (degree + 1) - 1;
-    EV << "degree: " << degree << endl;
-    EV << "marking field: " << mark_req << "\tUI: " << UI_i << "\n";
+    int UI = mark_req % (degree + 1) - 1;
+    EV << "marking field: " << mark_req << "\tUI: " << UI << "\n";
 
-    if (UI_i == -1) {
+    if (UI == -1) {
         EV << "Searching HashTable for the Upstream Router\n";
         int index = mark_req / (degree + 1);
 
         if (index != 0) {
-            UI_i = hashTable[index].UI;
+            UI = hashTable[index].UI;
             int mark_old = hashTable[index].mark;
 
             EV << "Sending reconstruction request with mark_old " << mark_old
-               << " to upstream router via UI " << UI_i << "\n";
+               << " to upstream router via UI " << UI << "\n";
 
             reconPacket->setMarkReq(mark_old);
-            send(reconPacket, gate("ethg$o", UI_i));
+            send(reconPacket, gate("ethg$o", UI));
         } else {
             EV << "This router is the nearest border router to the attacker\n";
             delete reconPacket;
@@ -137,10 +121,10 @@ void RIHTRouter::handleReconstructionRequest(RIHTReconstructionPacket *reconPack
         int mark_old = mark_req / (degree + 1);
 
         EV << "Sending reconstruction request with mark_old " << mark_old
-           << " to upstream router via UI " << UI_i << "\n";
+           << " to upstream router via UI " << UI << "\n";
 
         reconPacket->setMarkReq(mark_old);
-        send(reconPacket, gate("ethg$o", UI_i));
+        send(reconPacket, gate("ethg$o", UI));
     }
 }
 
