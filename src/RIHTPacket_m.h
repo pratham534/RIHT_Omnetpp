@@ -18,12 +18,14 @@
 
 class RIHTPacket;
 /**
- * Class generated from <tt>RIHTPacket.msg:10</tt> by opp_msgtool.
+ * Class generated from <tt>RIHTPacket.msg:4</tt> by opp_msgtool.
  * <pre>
  * message RIHTPacket
  * {
  *     int mark;
  *     int UI;
+ *     string srcAddress; // Source IP address
+ *     string destAddress; // Destination IP address
  * }
  * </pre>
  */
@@ -32,6 +34,8 @@ class RIHTPacket : public ::omnetpp::cMessage
   protected:
     int mark = 0;
     int UI = 0;
+    omnetpp::opp_string srcAddress;
+    omnetpp::opp_string destAddress;
 
   private:
     void copy(const RIHTPacket& other);
@@ -53,6 +57,12 @@ class RIHTPacket : public ::omnetpp::cMessage
 
     virtual int getUI() const;
     virtual void setUI(int UI);
+
+    virtual const char * getSrcAddress() const;
+    virtual void setSrcAddress(const char * srcAddress);
+
+    virtual const char * getDestAddress() const;
+    virtual void setDestAddress(const char * destAddress);
 };
 
 inline void doParsimPacking(omnetpp::cCommBuffer *b, const RIHTPacket& obj) {obj.parsimPack(b);}

@@ -1,6 +1,7 @@
 
 #include <omnetpp.h>
 #include "RIHTPacket_m.h"
+#include "RIHTReconstructionPacket_m.h"
 
 using namespace omnetpp;
 
@@ -26,8 +27,14 @@ void Receiver::handleMessage(cMessage *msg)
         // Handle self messages (timeouts, etc.)
         return;
     }
-    if (auto myMsg = dynamic_cast<RIHTPacket *>(msg)) {
-        EV << "Received message: Mark-" << myMsg->getMark() << " UI-"<< myMsg->getUI()<< "\n";
-    }
+    RIHTPacket *packet = check_and_cast<RIHTPacket *>(msg);
+    EV << "Packet Received from src: " << packet->getSrcAddress() << "\n";
+    EV << "Received message: Mark-" << packet->getMark() << " UI-"<< packet->getUI()<< "\n";
+
+    int UI = packet->getArrivalGate()->getIndex();
+    RIHTReconstructionPacket *repacket = new RIHTReconstructionPacket();
+    repacket->setMarkReq(packet->getMark());
+
+    sendDelayed(repacket, 4, gate("ethg$o", UI));
 
 }

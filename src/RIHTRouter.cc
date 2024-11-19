@@ -50,8 +50,10 @@ void RIHTRouter::handleMessage(omnetpp::cMessage *msg) {
         handleReconstructionRequest(reconPacket);
         return;
     }
-
     RIHTPacket *packet = check_and_cast<RIHTPacket *>(msg);
+
+    EV << "Packet srcAdd: " << packet->getSrcAddress() << "\nPacket destAdd: " << packet->getDestAddress() << "\n";
+
     int mark = packet->getMark();
     int upstreamInterface = packet->getArrivalGate()->getIndex();
     EV<<"p.mark = "<<mark<<" UI = "<<upstreamInterface<<"\n";
@@ -84,9 +86,6 @@ void RIHTRouter::handleMessage(omnetpp::cMessage *msg) {
             EV << "Hash Table After Logging Mark:\n";
             printHashTable();
         }
-
-    // Print hash table after logging the mark
-
         // Update mark_new based on the index
         mark_new = index * (degree + 1);
     }
@@ -95,15 +94,13 @@ void RIHTRouter::handleMessage(omnetpp::cMessage *msg) {
     // Step 5: Update the packet mark
     packet->setMark(mark_new);
 
-
-    /*
-     * below outgoingInterface logic
-     * to be modified ....
-     *
-     */
-
     // Compute the outgoing interface (downstream interface)
     int outgoingInterface = (upstreamInterface + 1) % degree;
+
+    std::string destAddress = packet->getDestAddress();
+    if (destAddress == "192.168.0.6") {
+        outgoingInterface = 1;
+    }
 
     EV << "Packet received on interface " << upstreamInterface
        << ", forwarding to interface " << outgoingInterface << "\n";
@@ -116,8 +113,11 @@ void RIHTRouter::handleMessage(omnetpp::cMessage *msg) {
 void RIHTRouter::handleReconstructionRequest(RIHTReconstructionPacket *reconPacket) {
     int mark_req = reconPacket->getMarkReq();
     int UI_i = mark_req % (degree + 1) - 1;
+    EV << "degree: " << degree << endl;
+    EV << "marking field: " << mark_req << "\tUI: " << UI_i << "\n";
 
     if (UI_i == -1) {
+        EV << "Searching HashTable for the Upstream Router\n";
         int index = mark_req / (degree + 1);
 
         if (index != 0) {

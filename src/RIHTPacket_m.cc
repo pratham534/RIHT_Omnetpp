@@ -177,6 +177,8 @@ void RIHTPacket::copy(const RIHTPacket& other)
 {
     this->mark = other.mark;
     this->UI = other.UI;
+    this->srcAddress = other.srcAddress;
+    this->destAddress = other.destAddress;
 }
 
 void RIHTPacket::parsimPack(omnetpp::cCommBuffer *b) const
@@ -184,6 +186,8 @@ void RIHTPacket::parsimPack(omnetpp::cCommBuffer *b) const
     ::omnetpp::cMessage::parsimPack(b);
     doParsimPacking(b,this->mark);
     doParsimPacking(b,this->UI);
+    doParsimPacking(b,this->srcAddress);
+    doParsimPacking(b,this->destAddress);
 }
 
 void RIHTPacket::parsimUnpack(omnetpp::cCommBuffer *b)
@@ -191,6 +195,8 @@ void RIHTPacket::parsimUnpack(omnetpp::cCommBuffer *b)
     ::omnetpp::cMessage::parsimUnpack(b);
     doParsimUnpacking(b,this->mark);
     doParsimUnpacking(b,this->UI);
+    doParsimUnpacking(b,this->srcAddress);
+    doParsimUnpacking(b,this->destAddress);
 }
 
 int RIHTPacket::getMark() const
@@ -213,6 +219,26 @@ void RIHTPacket::setUI(int UI)
     this->UI = UI;
 }
 
+const char * RIHTPacket::getSrcAddress() const
+{
+    return this->srcAddress.c_str();
+}
+
+void RIHTPacket::setSrcAddress(const char * srcAddress)
+{
+    this->srcAddress = srcAddress;
+}
+
+const char * RIHTPacket::getDestAddress() const
+{
+    return this->destAddress.c_str();
+}
+
+void RIHTPacket::setDestAddress(const char * destAddress)
+{
+    this->destAddress = destAddress;
+}
+
 class RIHTPacketDescriptor : public omnetpp::cClassDescriptor
 {
   private:
@@ -220,6 +246,8 @@ class RIHTPacketDescriptor : public omnetpp::cClassDescriptor
     enum FieldConstants {
         FIELD_mark,
         FIELD_UI,
+        FIELD_srcAddress,
+        FIELD_destAddress,
     };
   public:
     RIHTPacketDescriptor();
@@ -286,7 +314,7 @@ const char *RIHTPacketDescriptor::getProperty(const char *propertyName) const
 int RIHTPacketDescriptor::getFieldCount() const
 {
     omnetpp::cClassDescriptor *base = getBaseClassDescriptor();
-    return base ? 2+base->getFieldCount() : 2;
+    return base ? 4+base->getFieldCount() : 4;
 }
 
 unsigned int RIHTPacketDescriptor::getFieldTypeFlags(int field) const
@@ -300,8 +328,10 @@ unsigned int RIHTPacketDescriptor::getFieldTypeFlags(int field) const
     static unsigned int fieldTypeFlags[] = {
         FD_ISEDITABLE,    // FIELD_mark
         FD_ISEDITABLE,    // FIELD_UI
+        FD_ISEDITABLE,    // FIELD_srcAddress
+        FD_ISEDITABLE,    // FIELD_destAddress
     };
-    return (field >= 0 && field < 2) ? fieldTypeFlags[field] : 0;
+    return (field >= 0 && field < 4) ? fieldTypeFlags[field] : 0;
 }
 
 const char *RIHTPacketDescriptor::getFieldName(int field) const
@@ -315,8 +345,10 @@ const char *RIHTPacketDescriptor::getFieldName(int field) const
     static const char *fieldNames[] = {
         "mark",
         "UI",
+        "srcAddress",
+        "destAddress",
     };
-    return (field >= 0 && field < 2) ? fieldNames[field] : nullptr;
+    return (field >= 0 && field < 4) ? fieldNames[field] : nullptr;
 }
 
 int RIHTPacketDescriptor::findField(const char *fieldName) const
@@ -325,6 +357,8 @@ int RIHTPacketDescriptor::findField(const char *fieldName) const
     int baseIndex = base ? base->getFieldCount() : 0;
     if (strcmp(fieldName, "mark") == 0) return baseIndex + 0;
     if (strcmp(fieldName, "UI") == 0) return baseIndex + 1;
+    if (strcmp(fieldName, "srcAddress") == 0) return baseIndex + 2;
+    if (strcmp(fieldName, "destAddress") == 0) return baseIndex + 3;
     return base ? base->findField(fieldName) : -1;
 }
 
@@ -339,8 +373,10 @@ const char *RIHTPacketDescriptor::getFieldTypeString(int field) const
     static const char *fieldTypeStrings[] = {
         "int",    // FIELD_mark
         "int",    // FIELD_UI
+        "string",    // FIELD_srcAddress
+        "string",    // FIELD_destAddress
     };
-    return (field >= 0 && field < 2) ? fieldTypeStrings[field] : nullptr;
+    return (field >= 0 && field < 4) ? fieldTypeStrings[field] : nullptr;
 }
 
 const char **RIHTPacketDescriptor::getFieldPropertyNames(int field) const
@@ -425,6 +461,8 @@ std::string RIHTPacketDescriptor::getFieldValueAsString(omnetpp::any_ptr object,
     switch (field) {
         case FIELD_mark: return long2string(pp->getMark());
         case FIELD_UI: return long2string(pp->getUI());
+        case FIELD_srcAddress: return oppstring2string(pp->getSrcAddress());
+        case FIELD_destAddress: return oppstring2string(pp->getDestAddress());
         default: return "";
     }
 }
@@ -443,6 +481,8 @@ void RIHTPacketDescriptor::setFieldValueAsString(omnetpp::any_ptr object, int fi
     switch (field) {
         case FIELD_mark: pp->setMark(string2long(value)); break;
         case FIELD_UI: pp->setUI(string2long(value)); break;
+        case FIELD_srcAddress: pp->setSrcAddress((value)); break;
+        case FIELD_destAddress: pp->setDestAddress((value)); break;
         default: throw omnetpp::cRuntimeError("Cannot set field %d of class 'RIHTPacket'", field);
     }
 }
@@ -459,6 +499,8 @@ omnetpp::cValue RIHTPacketDescriptor::getFieldValue(omnetpp::any_ptr object, int
     switch (field) {
         case FIELD_mark: return pp->getMark();
         case FIELD_UI: return pp->getUI();
+        case FIELD_srcAddress: return pp->getSrcAddress();
+        case FIELD_destAddress: return pp->getDestAddress();
         default: throw omnetpp::cRuntimeError("Cannot return field %d of class 'RIHTPacket' as cValue -- field index out of range?", field);
     }
 }
@@ -477,6 +519,8 @@ void RIHTPacketDescriptor::setFieldValue(omnetpp::any_ptr object, int field, int
     switch (field) {
         case FIELD_mark: pp->setMark(omnetpp::checked_int_cast<int>(value.intValue())); break;
         case FIELD_UI: pp->setUI(omnetpp::checked_int_cast<int>(value.intValue())); break;
+        case FIELD_srcAddress: pp->setSrcAddress(value.stringValue()); break;
+        case FIELD_destAddress: pp->setDestAddress(value.stringValue()); break;
         default: throw omnetpp::cRuntimeError("Cannot set field %d of class 'RIHTPacket'", field);
     }
 }

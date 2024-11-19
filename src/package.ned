@@ -20,22 +20,16 @@ network RIHTNetwork
         }
     submodules:
         router1: RIHTRouter {
-            degree = 3;
-            hashTableSize = 10;
             @display("p=341,256");
             gates:
                 ethg[3];
         }
         router2: RIHTRouter {
-            degree = 2;
-            hashTableSize = 10;
             @display("p=228,183");
             gates:
                 ethg[2];
         }
         router3: RIHTRouter {
-            degree = 2;
-            hashTableSize = 10;
             @display("p=228,307");
             gates:
                 ethg[2];
